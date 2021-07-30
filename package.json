@@ -24,5 +24,8 @@
   "homepage": "https://github.com/sahiltyagi-sib/dummy-project#readme",
   "dependencies": {
     "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
   }
 }
