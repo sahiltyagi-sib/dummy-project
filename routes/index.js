@@ -1,12 +1,19 @@
 const express = require("express");
 const router = express.Router();
+const jwt = require("jsonwebtoken");
 
 router.get("/", (req, res) => {
   res.send("Homepage");
 });
 
-router.post("/", (req, res) => {
-  res.send(req.body);
+router.post("/login", (req, res) => {
+  let body = req.body;
+  let obj = {
+    username: body.name,
+    age: body.age,
+  };
+  const token = jwt.sign(obj, "secret");
+  res.send(token);
 });
 
 router.put("/", (req, res) => {
