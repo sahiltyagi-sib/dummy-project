@@ -38,14 +38,26 @@ router.post("/register", async (req, res) => {
   }
 });
 
-router.post("/login", (req, res) => {
-  let body = req.body;
-  let obj = {
-    username: body.name,
-    age: body.age,
-  };
-  const token = jwt.sign(obj, "secret");
-  res.send(token);
+router.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!(email && password)) {
+      return res.status(400).send("All inputs are required");
+    }
+    const user = await User.findOne({ email });
+    if (user && (await bcrypt.compare(password, user.password))) {
+      const token = jwt.sign(
+        { user_id: user._id, email },
+        process.env.TOKEN_KEY,
+        { expiresIn: "2h" }
+      );
+      res.status(201).json(token);
+    } else {
+      res.status(400).send("Invalid credentials");
+    }
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 router.put("/", (req, res) => {
