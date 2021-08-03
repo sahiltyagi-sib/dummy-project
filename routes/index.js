@@ -3,6 +3,7 @@ const router = express.Router();
 const jwt = require("jsonwebtoken");
 const User = require("../model/user");
 const bcrypt = require("bcryptjs");
+const verifyToken = require("../middleware/auth");
 
 router.post("/register", async (req, res) => {
   try {
@@ -51,7 +52,7 @@ router.post("/login", async (req, res) => {
         process.env.TOKEN_KEY,
         { expiresIn: "2h" }
       );
-      res.status(201).json(token);
+      res.status(201).send(token);
     } else {
       res.status(400).send("Invalid credentials");
     }
@@ -60,8 +61,8 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.put("/", (req, res) => {
-  res.send("Updated some data");
+router.get("/", verifyToken, (req, res) => {
+  res.send("Welcome");
 });
 
 router.delete("/", (req, res) => {
